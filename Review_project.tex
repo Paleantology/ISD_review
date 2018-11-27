@@ -1,0 +1,42 @@
+\documentclass[]{article}
+
+\begin{document}
+
+\title{Morphology Review}
+\author{Wright Lab Y`all}
+\date{Today}
+\maketitle
+
+
+Like parsimony, probabilistic models make a number of assumptions about the way morphological data evolved. 
+Paul Lewis introduced the Markovian \textit{K}-States, or Mk, model of morphological evolution in 2001. 
+The model is so-named because of the assumption that each character is always in one of {k} known states.
+One key assumption of Lewis' model is that there is an equal rate of transition between character states.
+For example, in a binary matrix, there is an equal probability of transitioning from a `0' state to a `1' state.
+Because this is a continuous-time model, these changes could occur anywhere along a branch, even including multiple changes occurring on a branch.
+\par
+
+Unobserved or `hidden' states violate the assumption that the data are always in \textit{k} states, which are known to us and observed in our dataset.
+The Mk model relies on a Q-matrix.
+If there are hidden states, then the matrix will be the wrong size, inflating transition rates.
+Beaulieu et al indicate that this may inflate the lengths of branches when hidden states are not accounted for in state-dependent speciation and extinction models.
+This is also a risk for phylogenetic estimation itself. \par
+
+The assumption of symmetry has been observed to be violated in about half of datasets observed by Wright, Lloyd and Hillis.
+Simulation results confirmed that model misspecification in failing to account for this asymmetry severely negatively impacts phylogenetic accuracy.
+To more adequately model phylogenetic data, the symmetric Beta prior was introduced in MrBayes, and extended in RevBayes (Wright, Johnson, Jenkins, Pett, Heath).
+Our model places a beta prior on character frequencies to allow variation in the frequencies character states.
+For example, if state 0 has a high transition rate to state 1, but state 0 is infrequently observed, that transition will not be common.
+This model has also been extended to model character state frequency variation in multistate characters using a Dirichlet distribution. \par
+
+
+Parsimony notably has difficulty with long branch lengths.
+In particular, parsimony is statistically inconsistent when we know the dataset has homoplasy.
+Parsimony prefers not to accept multiple evolutions of a character as an explanation for the data; instead interpreting that similarity as evidence of common descent. 
+The Mk model, by contrast, can accept the evolution of the same character state evolved multiple times, and, in practice, increase the rate of evolution on the tree. \par
+
+
+ 
+
+
+\end{document}
