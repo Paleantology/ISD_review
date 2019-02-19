@@ -249,18 +249,67 @@ This, however, introduces an element of user interpretation to the data that doe
 Continuous data have often been used for what is termed comparative analysis or macroevolutionary analysis, which is discussed in the section "Further evolutionary analysis with morphology". 
 Despite their relatively rare use, these data have been demonstrated to contain phylogenetic signal.
 
+The rich history of using continuous characters for comparative analysis enables those same models to be used for phylogenetic estimation.
+Brownian motion has been used to model trait data for phylogenetic estimation. 
+Brownian motion is used to model the value of continuously-varying data over time.
+This model is often referred to as the "random walk," due to the fact that in any time interval, the value of a trait can change randomly in both direction (positive or negative) and magnitude (small or large changes). 
+Brownian motion was originally used to describe the movement of particles suspended in fluids.
+In biology, Brownian motion may be compatible with a number (or combination) of evolutionary forces. 
 
+In a Brownian motion model, evolution is typically described by two parameters: the mean trait value, x, at the start of a particular time interval, and the evolutionary rate parameter, sigma. 
+X will be the value from which the trait can "walk" during the time interval. 
+Sigma will determine the magnitude with with the trait will step away from x. 
+Changes are expected to be distributed according to a normal distribution with mean 0 and variance proportional to the rate and size of the time interval.
+At very short time intervals, we expect to see little change. 
+For long intervals, we expect the normal to become wider and wider,
+indicating that the amount of change has the potential to be larger.
 
+Brownian motion has been used for a long time to model the evolution of traits on a tree.
+Recently, it has been implemented for phylogenetic estimation in both dated and undated trees.
+Simulation research indicates that continuous characters modeled under Brownian motion can lead to lower topological error than discrete morphological traits.
+In particular, this is true in datasets with multiple rates of evolution. 
+Wright and Hillis (2014) demonstrated that in discrete morphological traits, phylogenetic error is very high for low rate of evolution characters (due to low signal), and very high rate of evolutioon characters (due to saturation of changes).
+Continuous characters do not display this relationship as strongly.
+
+Use of continuous characters is promising because the Brownian motion model is fairly lightweight. 
+This allows for each character to have its own sigma, enabling multiple mechanisms in a dataset without having to calculate a character likelihood according to multiple Beta categories.
+Expectations about the evolution of continuous character are complex, but Brownian motion can be expanded to accommodate them.
+Characters are expected to covary in a Brownian motion framework. 
+This character correlation can be accounted for by estimating a correlation matrix from individuals in a lineage.
+If within-lineage variation is not accounted for, morphological evolution rates will be overestimated. 
+The correlation matrix can be used to correct within-lineage character correlation.
+Because the lineages are all connected by an underlying phylogeny, character correlation may also occur among lineages. 
+The correlation matrix can then be used to establish a correlation matrix among lineages, as well.
+
+The use of continuous characters in morphological phylogenetics is an exciting prospect along several lines.
+Firstly, Brownian motion is one of many comparative models of evolution.
+Others could be substituted, or multiple models used among characters.
+Even in the case that other models are not explored, the Brownian motion can correspond to different biological interpretations. 
+Brownian motion is typically interpreted to be analogous to traits evolving under drift, having no selective optima.
+Prior work (Hansen and Martins 1996) demonstrates that several models incorporating selection still appear indistinguishable from Brownian motion. 
+In sum, there are a variety of mechanisms that could be described by Brownian motion, and the research does not have to explictly choose to model them a priori.
+
+Secondly, these implementations are exciting because they enable the use of a third independent data source, modeled under different assumptions.
+Modeling traits according to Brownian motion to estimate a phylogeny from continuous trait data allows researchers to work in the same MCMC framework for continuous, discrete, and discrete molecular data. 
+Using all available data will enable researchers to validate the tree among sources, and formulate testable hypotheses of how model assumptions may impact the tree estimated.
+This also opens the path to perform joint estimation across multiple types of data.
+Indeed, fossil datasets are often limited in size. 
+Opening up new avenues to collect data, particularly if automation of data collection becomes commonplace, will allow researchers to make more complete use of specimens. 
 
 
 ## How does Bayesian modeling differ from parsimony?
 
+I have said very little thus far in this review about parsimony.
+My main purpose has been to lay out how Bayesian modeling of morphology works.
+Parsimony is still a dominant optimality criterion in morphological phylogenetics.
+It is informative to look at how the assumptions, mechanisms, and interpretation of Bayesian and parsimony methods are similiar, and how they are different.
+There are three main comparisons I would like to make between the two criteria: assumptions made about the evolutionary process, implemenatations of parsimony and Bayesian models, and outputs of parsimony and Bayesian analysis.
+
+### Assumptions about the evolutionary process
 
 
 
 
 
 
-
-
-5) What about more complex models, such as lineage diversification, or comparative methods? 
+## Brave new worlds of data-intensive morphology
