@@ -303,13 +303,127 @@ I have said very little thus far in this review about parsimony.
 My main purpose has been to lay out how Bayesian modeling of morphology works.
 Parsimony is still a dominant optimality criterion in morphological phylogenetics.
 It is informative to look at how the assumptions, mechanisms, and interpretation of Bayesian and parsimony methods are similiar, and how they are different.
-There are three main comparisons I would like to make between the two criteria: assumptions made about the evolutionary process, implemenatations of parsimony and Bayesian models, and outputs of parsimony and Bayesian analysis.
+There are three main comparisons I would like to make between the two criteria: assumptions made about the evolutionary process, interpretation of parsimony and Bayesian analysis.
 
 ### Assumptions about the evolutionary process
 
+Parsimony can come in several variations, just as we can relax various assumptions of the Mk model. 
+The most common variation is unweighted parsimony.
+This typically refers to an application of parsimony in which it is held that any change between any two character states is weighted equally.
+In this case, a change from 0 to a 1 state is as likely as a reversal between the two. 
+Surficially, this is quite similar to one of the chief assumptions of the Mk model - that character changes are symmetrical. 
+
+However, there are core difference between parsimony and Bayesian approaches which change the results and interpretation of these two ways of estimating trees. 
+In a Bayesian analysis, values are sampled for each of the parameters in the model, including branch lengths.
+Branch lengths are typically sampled as number of expected character changes per character.
+In a parsimony analysis, the tree that is favored is the one that minimizes the number of changes in the dataset across that tree.
+However, each character may have its own length on the tree.
+The final branch lengths represent the number of changes in the dataset along each branch, as a whole number, rather than a rate.
+This has desireable properties - in a maximum parsimony analysis, character changes can be mapped to specific branches.
+In Bayesian estimation, either more complex models or post-hoc analyses are required to do this.
 
 
+Advocates for parsimony often point to the aforementioned as a positive.
+Parsimony is often referred to as a "No Common Mechanisms model", which allows every character in the character matrix to have its own length on a common tree.
+This is intuitively appealing - it's unlikely that every character in a matrix evolves at the same rate.
+Allowing each site to have its own rate of evolution means that no matter how different the rates actually are, they can be accommodated.
+However, this same assumption makes it impossible to choose a likelihood implementation of the No Common Mechanisms model via even liberal information criteria due to its parameter richness.
+Model fitting techniques typically attempt to balance parameter richness with how much the fit of the model to the data improves with those additional parameters.
+What a model fitting technique cannot tell you is if the added parameters add biological realism. 
+There may very well be reasons why, even in the absence of statistical evidence, the assumptions of parsimony make more sense for their data.
+The purpose of this review is not to argue for one method over another, but to lay the groundwork for researchers to understand the underlying assumptions of these two different types of phylogenetic estimation.
 
+Bayesian estimation can enable researchers to relax the assumptions of the Mk model.
+Parsimony also allows users to do this.
+A parsimony step matrix can be specified, which allows researchers to place different weights on various character state transitions.
+For example, if a researcher believed it would be easy to lose a trait, but hard to regain it, they could weight the loss lightly, and the gain heavily.
+Then, when the parsimony tree is esitmated, trees that contain gains of the trait will have to compensate by minimizing parsimony steps in other parts of the dataset.
+This penalizes trees not containing the penalized gain.
+Researchers can specify custom step matrices for every character in the matrix, if desired.
+This flexibility enables researchers to, in effect, completely control the tree esitmated through a priori specifications of the types of changes that can be seen.
+Specifying a step matrix can be thought of as a type of very strong prior, which cannot be overcome by the signal in the data.
+
+There is another type of weighting that has become popular. 
+This type is referred to as "character weighting."
+In a dataset with character weighting applied, changes in certain characters are held to cout more towards the parsimony score than others.
+This often takes the form of downweighting characters thought to be highly homoplasious.
+When a researcher does this, they specify that certain characters are less reliable indicators of the true phylogeny than others.
+This may be done a priori, by the researcher specifying that a change in one character (the character thought to hold the truthful signal) must be balanced by multiple (2 or more) changes in others. 
+This can also be automated, a process often referred to as "implied weighting." 
+Under this approach, the first time a character changes state on a tree, the change is given the weight of one. 
+Subsequent changes are given smaller weights.
+In effect, this means that the more a character changes, the less it is allowed to influence the estimated tree.
+The implied weighting approach allows for the process of weighting to be more reproducible, and less dependent on observer bias.
+
+### Interpretation of Bayesian and parsimony analyses
+
+Parsimony aims to estimate the most parsimonious tree, i.e, the tree that minimizes the number of changes in the dataset along that tree.
+This is fairly straightforward to understand.
+Multiple most parsimonious trees may be estimated from the same dataset, if multiple sets of relationships, or branch length distributions, are equally parsimonious.
+We can think of parsimony methods as aiming to estimate one tree, but that this may not be possible for a particular dataset.
+
+Bayesian methods, however, provide a distribution of trees and parameter values sampled during the tree search.
+These are the values and trees proposed and evaluated by the MCMC algorithm during estimation.
+This posterior distribution can be used to test if the estimation has converged, or drawn enough independent samples that the true posterior has been approximated. 
+A Bayesian estimation is not expected to provide one evolutionary history, and set of parameters. 
+Rather, visualizing this uncertainty is considered by many to be integral to Bayesian estimation.
+For example, in a dated phylogeny, node ages are typically shown as distributions of possible ages, rather than point estimates.
+The shape are spread of the distribution itself is important information - a very wide distribution might indicate little confidence in the value.
+
+Both parsimony and Bayesian methods often rely on building a consensus tree.
+There are many ways to estimate a consensus tree (for a review see ), but fundamentally, a consensus tree summarizes the bipartitions on the tree, and turns a sample of trees into a single tree object.
+In a Bayesian analysis, those trees are normally labeled with the posterior probability, or the probability of the parameters and tree given the data. 
+In parsimony analyses, further estimations, such as bootstrap, must be performed in order to assess confidence in a particular bipartition.
+These approaches subsample columns of data in a phylogenetic matrix and re-estimate trees from the generated samples.
+Whereas Bayesian posterior probability can be thought of as the probability of the phylogenetic hypothesis given the data, the bootstrap can be thought of as a measure of repeatability of the hypothesis given the data.
+For example, if 1000 subsampled replicate datasets are used to estimate trees, and 999 of them support the same tree, this is the evidence that the collected data strongly support the estimated topology.
+However, collection of additional data could change the bootstrap values.
+
+These two approaches have implications for how model fit and adequacy can be addressed.
+As discussed above, both Bayesian methods are parsimony make assumptions about the data. 
+In a Bayesian method, the fit of the model to the data can be described by calculating the marginal likelihood of the data, the probability of the data given the model.
+The calculation of this quantity can be complex, and beyond the scope of this paper, but for an example see here.
+This quantity allows for the comparison of models using the Bayes Factor, a standardized statistical framework for comparing the weight of evidence for different models.
+In this way, assumptions about the data either via the model or the prior can be tested.
+An equivalent framework does not exist for parsimony. 
+Under the maximum parsimony criterion, if a shorter tree is returned, that is considered to be the better tree.
 
 
 ## Brave new worlds of data-intensive morphology
+
+As we've seen in the previous sections, estimating phylogenetic trees from morphological information is an evolving science.
+Between parsimony estimation and Bayesian methods, many combinations of assumptions can be made to suit a given dataset.
+Researchers have a greater range of choices than at any point in the past to try, and create, new models for understanding the evolution of taxa and traits.
+Below, I will highlight two that are particularly interesting.
+
+### Modularity of the prior and the model
+
+Historically, many Bayesian estimation software suites have allowed only limited choices of priors on any model parameter, and limited control over the shapes that the prior distribution can take.
+More modern software allows researchers to experiment more broadly with novel combinations of parameters and priors. 
+
+In the section "Bayesian modeling of morphological data", we discuss placing priors on ACRV and character state frequencies. 
+In the previous generation of phylogenetics software (i.e., MrBayes), priors of this nature had to be coded into the software by the developers.
+If a user wanted to use a certain prior distribution with a new data type, they may have needed to program it in in the actual software.
+Current generation software (Beast2, RevBayes) allows users to generate new combinations of parameters and priors, and to contribute the scripts to do so back so other users may find them via contributions to their open-access software repositories. 
+
+This philosophy of flexibility is important to progress in this field.
+Firstly, many of the models we use to estimate phylogenies were not generated with morphology in mind.
+For example, prior work indicates that using the Gamma distribution to model ACRV may not be optimal for morphological data.
+On its face, this makes a great deal of sense: traditionally, invariant characters have not been collected by researchers.
+Nor have characters that change only once on a tree.
+This means that we typically must correct for this omission, often referred to as correcting for ascertainment bias.
+But when we use Gamma-distributed rate variation, we assume that there are some extreme low-rate characters in the dataset.
+For morphology, this is unlikely to be true.
+A modular framework allows a user to simply substitute another prior distribution.
+
+An implicit benefit to this is that researchers can realize models that they believe will fit their data without needing to involve a developer of the software. 
+In previous software generations, when a researcher needed a new model, they would contact the developer, and let them know what they needed.
+Depending on how much time the developer had to handle user requests, perhaps they would implement it. 
+Modular software allows researchers to be the developer of the model.
+This enables the expert on the data to create models to describe those data, without having to wait on a software expert.
+Likewise, the software expert is also freed from needing to constantly balance user requests with their own work.
+Embracing open source contribution also allows users to contribute back their scripts for analyses, such that other users can find and use them.
+Modularity and openess enable faster scientific progress as researchers can implement new models quickly, and disseminate those results with an interested community of scientific practice.
+
+### 
+
